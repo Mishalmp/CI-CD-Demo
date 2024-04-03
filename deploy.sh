@@ -1,24 +1,26 @@
 #!/bin/bash
 
-echo "deleting old app"
-sudo rm -rf /var/www/
+echo "Deleting old app"
+sudo rm -rf /var/www/*
 
-echo "creating app folder"
+echo "Creating app folder"
 sudo mkdir -p /var/www/demoapp 
 
-echo "moving files to app folder"
-sudo mv  * /var/www/demoapp
+echo "Moving files to app folder"
+sudo mv * /var/www/demoapp/
 
 # Navigate to the app directory
 cd /var/www/demoapp/
-sudo mv env .env
+
+# Rename the environment file if needed (optional)
+# sudo mv env .env
 
 sudo apt-get update
-echo "installing python and pip"
-sudo apt-get install -y python3 python3-pip 
+echo "Installing Python and pip"
+sudo apt-get install -y python3 python3-pip
 
 # Install application dependencies from requirements.txt
-echo "Install application dependencies from requirements.txt"
+echo "Installing application dependencies from requirements.txt"
 sudo pip install -r requirements.txt
 
 # Update and install Nginx if not already installed
@@ -53,11 +55,7 @@ fi
 sudo pkill gunicorn
 sudo rm -rf myapp.sock
 
-# # Start Gunicorn with the Flask application
-# # Replace 'server:app' with 'yourfile:app' if your Flask instance is named differently.
-# # Replace 'server:app' with 'project.wsgi:application' if your django instance is named differently.
-# # gunicorn --workers 3 --bind 0.0.0.0:8000 server:app &
-
-echo "starting gunicorn"
-sudo gunicorn --workers 3 --bind unix:myapp.sock  demoproject.wsgi:application --user www-data --group www-data --daemon
-echo "started gunicorn 🚀"
+# Start Gunicorn with the Django application
+echo "Starting Gunicorn"
+sudo gunicorn --workers 3 --bind unix:/var/www/demoapp/myapp.sock demoproject.wsgi:application --user www-data --group www-data --daemon
+echo "Started Gunicorn 🚀"
