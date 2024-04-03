@@ -1,0 +1,7 @@
+asgiref
+Django
+django-restframework
+djangorestframework
+python-decouple
+sqlparse
+tzdata
